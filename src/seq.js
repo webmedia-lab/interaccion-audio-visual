@@ -50,6 +50,7 @@ function Seq (steps, bpm) {
         beat = 60.0 / bpm, // duración del 1 slot en segundos
         round = beat * steps * 1000, // duración de una vuelta en millisegundos
         slots = [],
+        window.AudioContext = AudioContext || WebkitAudioContext;
         context = new AudioContext(),
         clock = new WAAClock(context, {toleranceEarly: 0.1}),
         soundingKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 65, 83, 68, 70, 71, 72, 74, 75, 76, 90, 88, 67, 86, 66, 78, 77],
