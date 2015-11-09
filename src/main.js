@@ -1,3 +1,5 @@
+window.AudioContext = AudioContext || WebkitAudioContext;
+
 $(function() {
 
     var container = $('#content'),
