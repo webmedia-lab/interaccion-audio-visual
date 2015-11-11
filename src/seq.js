@@ -45,17 +45,18 @@ var  EvilExtensions = (function () {
 })();
 
 function Seq (steps, bpm) {
-    var steps = steps || 9,
+    var steps = steps || 24,
         bpm = bpm || 400,  
         beat = 60.0 / bpm, // duración del 1 slot en segundos
         round = beat * steps * 1000, // duración de una vuelta en millisegundos
         slots = [],
-        window.AudioContext = AudioContext || WebkitAudioContext;
         context = new AudioContext(),
         clock = new WAAClock(context, {toleranceEarly: 0.1}),
         soundingKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 65, 83, 68, 70, 71, 72, 74, 75, 76, 90, 88, 67, 86, 66, 78, 77],
         queue = [],
-        idleTime = 0
+        lastInteraction = 0,
+        deathRate = 4 * round + Math.random() * 2 * round,
+        lifeRate  = 12 * round + Math.random() * 8 * round
     ;
     
     
@@ -96,8 +97,10 @@ function Seq (steps, bpm) {
     }
 
     
-    function kill() {       
-        var ev = queue.splice(Math.floor(Math.random() * queue.length), 1)[0];
+    function kill() {
+        var i = Math.floor(Math.random() * queue.length);
+        var ev = queue.splice(i, 1)[0];
+        console.log('------------------------------', i, ev);
         if ( ev !== undefined ) {
             slots[ev.slot].remove(ev.key);
             console.log('sound ' + ev.key + ' in slot ' +  ev.slot + ' died...');
@@ -105,31 +108,52 @@ function Seq (steps, bpm) {
     }
     
     function death(){
-        // fibonacci ?
-        if (queue.length > 21) { (3).times(kill) }
-        else if (queue.length > 13) { (2).times(kill) }
-        else if (queue.length > 8) { kill() }
-        else if (queue.length > 3) { kill() }
-        console.log('death called');
-        setTimeout(death, Math.random() * 2 * round);
+        if (queue.length > 12) { (2).times(kill) }
+        else { kill() }
+        console.log('next death: ' + deathRate);
+        setTimeout(death, deathRate);
     }
 
     function life() {
         var key = soundingKeys.sample();
         console.log('bringing sound alive ' + key);
         schedule(key, context.currentTime);
-        var next = 8 * round + Math.random() * 4 * round;
-        console.log('next life ' + next);
-        setTimeout(life, next);
+        console.log('next life ' + lifeRate);
+
+        setTimeout(life, lifeRate);
     }
 
+    function tide() {
+        if (context.currentTime - lastInteraction > 10) {
+            // epidemia
+            deathRate = round;
+            lifeRate = (8 + Math.random() * 8 ) * round;
+        } else {
+            deathRate = (7 + Math.random() * 5 ) * round;
+            lifeRate = (9 + Math.random() * 3 ) * round;
+        }
+
+        setTimeout(tide, 1000);
+    }
+
+    function globalChange() {
+        (5).times(function () {
+            var next = Math.floor(Math.random() * steps);
+            console.log('globalChange: ' + next);
+            var soundingKey = soundingKeys.sample();
+            slots[next].push(soundingKey);
+            queue.push({ key: soundingKey, slot: next, time: context.currentTime })
+        });
+    }
+    
     // Initialization
     
     // initialize sequencer steps
     steps.times( function(i) { slots[i] = [] });
     
     window.addEventListener('keydown', function (event) {
-        idleTime = 0;
+        lastInteraction = context.currentTime;
+        
         var key = event.keyCode || event.which;
         event.preventDefault();
         if (event.ctrlKey || event.altKey) {
@@ -143,34 +167,22 @@ function Seq (steps, bpm) {
         
         else if (soundingKeys.includes(key)) {
             schedule(key, context.currentTime);
+            schedule(key, context.currentTime + round / 2000 );
         }
     });
 
-    // create the tick for the sequencer
-    //setInterval(tick, beat * 1000)
     clock.start();
     clock.callbackAtTime(tick, 0)
         .repeat(beat)
         .tolerance({late: 100});
 
-    // Garbage collector
-    // var GCTimeout = null;
-    // GCTimeout = setInterval( function () {
-    //     if (queue.length > 16) { launchGarbageCollector() };
-    //     clearInterval(GCGCTimeout)
-    // }, 2000);
 
     // Set the ecosystem alive
     death();
     life();
-
-    //idle time management
-
-    // idleInterval = setInterval(function(){
-    //     idleTime++;
-    //     //if (idleTime > algo) { hacer algo }
-    // }, 1000);
-    
+    tide();
+    globalChange();
+        
     
     return {
         steps: steps,
