@@ -1,42 +1,27 @@
 Un sistema se sustenta en reglas.
 
-Son las le dan origen, sentido
+Son las le dan origen, sentido, las que le dan ser.
 
-las que le dan ser
-
-La interacción humana tiene un potencial creador ,
+La interacción humana tiene un potencial creador,
 tiene la capacidad de gestar cosas nuevas,
-incluso, de mejorarlo
+incluso, de mejorarlo. Pero esa misma interacción, creadora y fructífera,
+interfiere con el sistema, lo degrada, y puede llegar a ser acaso destructiva.
 
 
-pero esa misma interacción, creadora y fructífera,
+Sea responsable de sus actos,
+hágase cargo de lo que genera.
+Tome conciencia que no es el único en el mundo.
 
-interfiere con el sistema, lo degrada,
-
-y puede llegar a ser incluso
-
-destructiva
-
-
-
-Sea responsable de sus actos
-hágase cargo de lo que genera
-Tome conciencia que no es el único en el mundo
-
-Disfrute
+Disfrute.
 
 
 
 EcoSistema 
 
 Interacción Audio Visual basada en Patatap (http://www.patatap.com)
-Y componentes de programación propios
-
-
+y componentes de programación propios
 
 
 Un ecosistema se mantiene en un delicado equilibrio omeostático.
 Fuerzas entrópicas, creativas, de cambio se balacean con
 aquellas que tienden a la estabilidad, a la preservación.
-
-

@@ -128,6 +128,10 @@ function Seq (steps, bpm) {
             // epidemia
             deathRate = round;
             lifeRate = (8 + Math.random() * 8 ) * round;
+        } else if (context.currentTime - lastInteraction > 20) {
+            // equilibrio
+            lifeRate = (7 + Math.random() * 5 ) * round;
+            deathRate = (9 + Math.random() * 3 ) * round;
         } else {
             deathRate = (7 + Math.random() * 5 ) * round;
             lifeRate = (9 + Math.random() * 3 ) * round;
