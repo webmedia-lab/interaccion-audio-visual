@@ -56,7 +56,8 @@ function Seq (steps, bpm) {
         queue = [],
         lastInteraction = 0,
         deathRate = 4 * round + Math.random() * 2 * round,
-        lifeRate  = 12 * round + Math.random() * 8 * round
+        lifeRate  = 12 * round + Math.random() * 8 * round,
+        rand = Math.random() * 10 * 600000;
     ;
     
     
@@ -119,7 +120,6 @@ function Seq (steps, bpm) {
         console.log('bringing sound alive ' + key);
         schedule(key, context.currentTime);
         console.log('next life ' + lifeRate);
-
         setTimeout(life, lifeRate);
     }
 
@@ -137,13 +137,21 @@ function Seq (steps, bpm) {
     }
 
     function globalChange() {
-        (5).times(function () {
-            var next = Math.floor(Math.random() * steps);
-            console.log('globalChange: ' + next);
-            var soundingKey = soundingKeys.sample();
-            slots[next].push(soundingKey);
-            queue.push({ key: soundingKey, slot: next, time: context.currentTime })
-        });
+        rand = Math.random() * 10 * 600000;
+        console.log('globalChange, rand: ' + rand);
+
+        if (lastInteraction > rand) {
+            console.log('making global change');
+            (5).times(function () {
+                var next = Math.floor(Math.random() * steps);
+                console.log('globalChange: ' + next);
+                var soundingKey = soundingKeys.sample();
+                slots[next].push(soundingKey);
+                queue.push({ key: soundingKey, slot: next, time: context.currentTime })
+            });
+        }
+
+        setTimeout(tide, 10000);
     }
     
     // Initialization
