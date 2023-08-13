@@ -11,7 +11,7 @@ var  EvilExtensions = (function () {
 
         return this;
     }
-    
+
     Array.prototype.sample = function () {
         return this[ Math.floor(Math.random() * this.length) ];
     }
@@ -46,7 +46,7 @@ var  EvilExtensions = (function () {
 
 function Seq (steps, bpm) {
     var steps = steps || 24,
-        bpm = bpm || 400,  
+        bpm = bpm || 400,
         beat = 60.0 / bpm, // duración del 1 slot en segundos
         round = beat * steps * 1000, // duración de una vuelta en millisegundos
         slots = [],
@@ -59,18 +59,18 @@ function Seq (steps, bpm) {
         lifeRate  = 12 * round + Math.random() * 8 * round,
         rand = Math.random() * 10 * 600000;
     ;
-    
-    
+
+
     function slotAtTime(time){
         return Math.floor(time / beat) % steps;
     }
-    
+
     function schedule(key, time) {
         var slot = slotAtTime(time);
         if ( ! slots[slot].includes(key) ) {
             console.log('adding key ' + key + ' on slot ' + slot);
             slots[slot].push(key);
-            
+
             queue.push({ key: key, slot: slot, time: time })
         }
     }
@@ -97,7 +97,7 @@ function Seq (steps, bpm) {
         playSlot( slotAtTime(context.currentTime) );
     }
 
-    
+
     function kill() {
         var i = Math.floor(Math.random() * queue.length);
         var ev = queue.splice(i, 1)[0];
@@ -107,7 +107,7 @@ function Seq (steps, bpm) {
             console.log('sound ' + ev.key + ' in slot ' +  ev.slot + ' died...');
         }
     }
-    
+
     function death(){
         if (queue.length > 12) { (2).times(kill) }
         else { kill() }
@@ -157,26 +157,27 @@ function Seq (steps, bpm) {
 
         setTimeout(tide, 10000);
     }
-    
+
     // Initialization
-    
+
     // initialize sequencer steps
     steps.times( function(i) { slots[i] = [] });
-    
+
     window.addEventListener('keydown', function (event) {
+        context.resume()
         lastInteraction = context.currentTime;
-        
+
         var key = event.keyCode || event.which;
         event.preventDefault();
         if (event.ctrlKey || event.altKey) {
-            return false; 
+            return false;
         }
 
         else if (key == 8) {
             console.log('cleaning on!')
             clean();
         }
-        
+
         else if (soundingKeys.includes(key)) {
             schedule(key, context.currentTime);
             schedule(key, context.currentTime + round / 2000 );
@@ -194,8 +195,7 @@ function Seq (steps, bpm) {
     life();
     tide();
     globalChange();
-        
-    
+
     return {
         steps: steps,
         bmp: bpm,
